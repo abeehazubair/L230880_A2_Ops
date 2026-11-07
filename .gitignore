@@ -1,0 +1,21 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Secrets - never commit
+*.env
+.env
+!.env.example
+
+# Generated / large outputs
+mlruns/
+models/
+tuner_runs/
+*.keras
+*.h5
+
+# Local only
+evidence/
+.vscode/
+.claude/
