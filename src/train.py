@@ -49,7 +49,8 @@ def parse_args():
 
 
 def git_info():
-    run = lambda *a: subprocess.run(["git", *a], capture_output=True, text=True).stdout.strip()
+    def run(*a):
+        return subprocess.run(["git", *a], capture_output=True, text=True).stdout.strip()
     return run("rev-parse", "HEAD"), bool(run("status", "--porcelain", "--untracked-files=no"))
 
 

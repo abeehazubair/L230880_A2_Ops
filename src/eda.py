@@ -62,7 +62,7 @@ for ax, (col, label) in zip(axes, cols):
              if df[col].min() <= t <= df[col].max()]
     ax.set_xticks(ticks)                                   # plain readable ticks
     ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:,.0f}"))
-    ax.xaxis.set_minor_formatter(NullFormatter()) 
+    ax.xaxis.set_minor_formatter(NullFormatter())
     ax.set_xlabel(label + "  [log scale]")
     ax.set_ylabel("% of images in class")
     ax.set_title(f"{label} per class")

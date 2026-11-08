@@ -15,6 +15,6 @@ app = create_app()
 if __name__ == "__main__":
     host, port = os.getenv("HOST", "127.0.0.1"), int(os.getenv("PORT", "8000"))
     logging.getLogger("visionguard").info("serving on http://%s:%s (debug off)", host, port)
-    body_limit = int(Config.MAX_UPLOAD_MB * 2 * 1024 * 1024)   # above Flask's limit -> Flask shows the friendly 413 page
+    body_limit = int(Config.MAX_UPLOAD_MB * 2 * 1024 * 1024)   # above Flask's limit -> friendly 413 page
     serve(app, host=host, port=port, threads=int(os.getenv("THREADS", "4")),
           max_request_body_size=body_limit, inbuf_overflow=body_limit)   # whole request body stays in RAM

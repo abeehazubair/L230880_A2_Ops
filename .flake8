@@ -1,0 +1,7 @@
+[flake8]
+max-line-length = 120
+exclude = venv,.git,__pycache__,outputs,mlruns,tuner_runs,data,models
+# matplotlib.use("Agg") must run before pyplot is imported -> imports below it are intentional
+per-file-ignores =
+    src/*.py:E402
+    labs/*.py:E402

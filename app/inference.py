@@ -26,7 +26,8 @@ class VisionGuardModel:
         # an explicit threshold (e.g. from an environment variable) wins over the registry value
         self.threshold = float(threshold if threshold is not None else meta.get("threshold", 0.5))
         self.img_size = int(meta.get("img_size", self.model.input_shape[1]))
-        self.version = f"{meta.get('name', 'VisionGuard')} v{meta.get('version', '?')} ({meta.get('run_name', 'local file')})"
+        self.version = (f"{meta.get('name', 'VisionGuard')} v{meta.get('version', '?')} "
+                        f"({meta.get('run_name', 'local file')})")
         self.model(tf.zeros((1, self.img_size, self.img_size, 3)), training=False)   # warm-up
         self.load_seconds = time.perf_counter() - t0
 

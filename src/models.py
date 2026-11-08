@@ -77,7 +77,7 @@ def build_transfer(backbone="mobilenetv2", img_size=IMG_SIZE, dropout=0.3, learn
 
 
 def get_backbone(model):
-    return next(l for l in model.layers if isinstance(l, tf.keras.Model))
+    return next(layer for layer in model.layers if isinstance(layer, tf.keras.Model))
 
 
 def unfreeze_last_block(model, learning_rate=1e-5, n_layers=None):
@@ -85,7 +85,7 @@ def unfreeze_last_block(model, learning_rate=1e-5, n_layers=None):
     backbone = model.name.replace("_transfer", "")
     base = get_backbone(model)
     base.trainable = True
-    names = [l.name for l in base.layers]
+    names = [layer.name for layer in base.layers]
     start = len(names) - n_layers if n_layers else names.index(BACKBONES[backbone][2])
     for i, layer in enumerate(base.layers):
         # BatchNorm layers stay frozen: their statistics come from 1.4M ImageNet images
@@ -95,8 +95,8 @@ def unfreeze_last_block(model, learning_rate=1e-5, n_layers=None):
 
 def trainable_summary(model):
     base = get_backbone(model)
-    inside = [l.name for l in base.layers if l.trainable and l.trainable_weights]
-    head = [l.name for l in model.layers if l is not base and l.trainable_weights]
+    inside = [layer.name for layer in base.layers if layer.trainable and layer.trainable_weights]
+    head = [layer.name for layer in model.layers if layer is not base and layer.trainable_weights]
     n_train = sum(int(np.prod(w.shape)) for w in model.trainable_weights)
     return inside, head, n_train, model.count_params()
 

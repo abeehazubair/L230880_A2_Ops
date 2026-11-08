@@ -7,6 +7,7 @@ name: l230880_a2_ops
 services:
   db:
     image: postgres:16-alpine
+    init: true
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-visionguard}
       POSTGRES_USER: ${POSTGRES_USER:-visionguard}
@@ -24,6 +25,7 @@ services:
   web:
     build: .
     image: visionguard-web:1.0
+    init: true                                   # tiny init as PID 1 forwards SIGTERM -> clean, fast "docker stop" (was exit 137)
     depends_on:
       db:
         condition: service_healthy               # wait until Postgres is ready, not just started

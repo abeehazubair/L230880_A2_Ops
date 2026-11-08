@@ -1,0 +1,10 @@
+# CI dependencies (GitHub Actions): the web app WITHOUT TensorFlow + lint/test tools.
+# Tests use a fake predictor, so no model file or TensorFlow is needed (fast CI).
+flask==3.1.3
+waitress==3.0.2
+sqlalchemy==2.1.8
+pillow==13.0.0
+python-dotenv==1.2.4
+requests==2.34.2
+pytest==9.2.0
+flake8==7.5.0

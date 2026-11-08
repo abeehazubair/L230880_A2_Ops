@@ -1,0 +1,46 @@
+# VisionGuard CI (Task 6.6): lint + tests on every push / pull request, then build the Docker image.
+# No secrets are needed: tests use a fake predictor and the image build does not download the model.
+# If a step ever needs one (e.g. pushing to a registry), store it in
+# GitHub -> Settings -> Secrets and variables -> Actions and use ${{ secrets.NAME }} - never write it here.
+name: VisionGuard CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements-ci.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements-ci.txt
+
+      - name: Lint (flake8)
+        run: flake8 app src tests labs
+
+      - name: Tests (pytest)
+        run: pytest -v
+
+  docker-build:
+    needs: lint-and-test            # only build the image when lint and tests passed
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t visionguard-web:ci-${{ github.sha }} .
+
+      - name: Show image size
+        run: docker images visionguard-web

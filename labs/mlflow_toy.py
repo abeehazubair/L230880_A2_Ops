@@ -57,7 +57,9 @@ with mlflow.start_run(run_name=f"lr={args.lr}"):
     for ax, m in zip(axes, ["loss", "accuracy"]):
         ax.plot(hist.history[m], label="train")
         ax.plot(hist.history["val_" + m], label="validation")
-        ax.set_title(f"{m} (lr={args.lr})"); ax.set_xlabel("epoch"); ax.legend()
+        ax.set_title(f"{m} (lr={args.lr})")
+        ax.set_xlabel("epoch")
+        ax.legend()
     fig.tight_layout()
     mlflow.log_figure(fig, "training_curves.png")        # the plot artifact
 
