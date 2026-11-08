@@ -7,7 +7,6 @@ Run directly to check the pipeline and save a figure of one augmented batch:
 """
 from pathlib import Path
 
-import pandas as pd
 import tensorflow as tf
 
 IMG_SIZE = 224
@@ -45,6 +44,7 @@ def build_augmenter(seed=SEED):
 
 def make_dataset(split, img_size=IMG_SIZE, batch_size=BATCH_SIZE, augment=None, seed=SEED):
     """split = 'train' | 'val' | 'test'. Returns batches of (float32 images 0-255, labels)."""
+    import pandas as pd          # training-only dependency; the serving image does not need pandas
     df = pd.read_csv(SPLITS / f"{split}.csv")
     training = split == "train"
     augment = training if augment is None else (augment and training)   # never augment val/test

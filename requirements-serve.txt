@@ -1,0 +1,16 @@
+# Runtime dependencies of the VisionGuard web app / model API (Docker image).
+# Training-only tools (MLflow, DVC, Keras Tuner, pandas, ...) are NOT here -> smaller image.
+#
+# TensorFlow: CPU-only build. A web server has no GPU and the CPU package skips GPU support,
+# which keeps the image much smaller. Same version (2.15.1) as training, so the saved model loads.
+tensorflow-cpu==2.15.1 ; platform_machine == "x86_64"
+# On Arm servers (e.g. Oracle Ampere A1) the plain "tensorflow" wheel is the CPU build.
+tensorflow==2.15.1 ; platform_machine == "aarch64"
+numpy==1.26.4
+pillow==13.0.0
+flask==3.1.3
+waitress==3.0.2
+sqlalchemy==2.1.8
+psycopg2-binary==2.9.13
+python-dotenv==1.2.4
+requests==2.34.2

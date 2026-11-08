@@ -1,0 +1,46 @@
+# VisionGuard stack (Task 6.3): Flask web app + PostgreSQL.
+#   docker compose up -d --build        start everything
+#   docker compose ps                   status (both should become "healthy")
+# All passwords/keys come from the untracked .env file (template: .env.example).
+name: l230880_a2_ops
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-visionguard}
+      POSTGRES_USER: ${POSTGRES_USER:-visionguard}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data          # named volume: history survives container re-creation
+    healthcheck:                                 # "healthy" only when Postgres accepts connections
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    restart: unless-stopped
+    # NO "ports:" section -> the database is reachable only inside the Compose network (as "db:5432")
+
+  web:
+    build: .
+    image: visionguard-web:1.0
+    depends_on:
+      db:
+        condition: service_healthy               # wait until Postgres is ready, not just started
+    environment:
+      # "db" is the service name - Compose's internal DNS resolves it to the database container
+      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER:-visionguard}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-visionguard}
+      MODEL_PATH: /app/models/champion
+      INFERENCE_MODE: local
+      THRESHOLD: ${THRESHOLD:-}
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-5}
+      API_KEY: ${API_KEY:?Set API_KEY in .env}
+      SECRET_KEY: ${SECRET_KEY:?Set SECRET_KEY in .env}
+    volumes:
+      - ./models:/app/models:ro                  # champion model mounted read-only (not baked into the image)
+    ports:
+      - "${WEB_PORT:-8000}:8000"                 # only the web app is published
+    restart: unless-stopped
+
+volumes:
+  pgdata:

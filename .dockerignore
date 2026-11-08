@@ -1,0 +1,35 @@
+# Keep the build context small and secrets out of the image.
+# Secrets
+.env
+*.env
+**/config.local
+
+# Python environments and caches
+venv/
+.venv/
+__pycache__/
+**/*.pyc
+
+# Data, models and experiment outputs (the model is mounted at run time)
+data/
+models/
+outputs/
+mlruns/
+tuner_runs/
+reports/
+splits/
+*.db
+
+# Version control, tooling, docs and notebooks
+.git/
+.github/
+.dvc/
+.dvcignore
+.claude/
+.vscode/
+labs/
+evidence/
+*.md
+*.ipynb
+Dockerfile*
+docker-compose*.yml
