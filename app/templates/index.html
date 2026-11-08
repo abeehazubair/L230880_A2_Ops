@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Upload{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>Is this image AI-generated?</h1>
+  <p class="muted">Upload a picture and VisionGuard estimates whether it was produced by generative AI or is a real (human-made) image.</p>
+  <form action="{{ url_for('predict') }}" method="post" enctype="multipart/form-data" class="upload">
+    <label class="drop">
+      <input type="file" name="image" id="image" accept="{% for e in allowed %}.{{ e }}{{ ',' if not loop.last }}{% endfor %}" required>
+      <span id="drop-text">Choose an image…</span>
+      <img id="preview" alt="" hidden>
+    </label>
+    <button type="submit" class="btn">Analyse image</button>
+  </form>
+  <p class="hint">Accepted: {{ allowed|join(', ') }} · max {{ '%g'|format(max_mb) }} MB · the image is analysed in memory and is <strong>not stored</strong>.</p>
+</section>
+<script>
+  const input = document.getElementById('image'), img = document.getElementById('preview'), txt = document.getElementById('drop-text');
+  input.addEventListener('change', () => {
+    const f = input.files[0]; if (!f) return;
+    txt.textContent = f.name; img.src = URL.createObjectURL(f); img.hidden = false;
+  });
+</script>
+{% endblock %}

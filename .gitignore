@@ -22,3 +22,6 @@ evidence/
 
 # Per-run training outputs (stored in MLflow)
 outputs/
+
+# Local SQLite database
+*.db

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Result{% endblock %}
+{% block content %}
+{% set is_ai = r.label == 'AI-generated' %}
+<section class="card result">
+  <img class="thumb" src="{{ preview }}" alt="uploaded image preview">
+  <div>
+    <p class="muted small">Verdict #{{ r.id }} · {{ r.filename }}</p>
+    <h1 class="verdict {{ 'ai' if is_ai else 'real' }}">{{ r.label }}</h1>
+    <p class="conf">Confidence <strong>{{ '%.1f'|format(r.confidence * 100) }}%</strong></p>
+    <div class="bar"><span class="{{ 'ai' if is_ai else 'real' }}" style="width: {{ (r.confidence * 100)|round(1) }}%"></span></div>
+    <dl class="facts">
+      <dt>P(AI-generated)</dt><dd>{{ '%.4f'|format(r.p_ai) }}</dd>
+      <dt>Decision threshold</dt><dd>{{ r.threshold }} (chosen on validation data)</dd>
+      <dt>Model</dt><dd>{{ r.model_version }}</dd>
+      <dt>Image</dt><dd>{{ r.width }}×{{ r.height }} {{ r.image_format }}, {{ (r.file_size / 1024)|round(0)|int }} KB</dd>
+      {% if r.inference_ms %}<dt>Inference time</dt><dd>{{ r.inference_ms }} ms</dd>{% endif %}
+    </dl>
+  </div>
+</section>
+<section class="caveat">
+  <strong>Please read before relying on this result.</strong>
+  This is a statistical estimate, not proof. On held-out test images this model was right about
+  3 out of 4 times, and it wrongly flagged about 15% of real images as AI, most often human paintings,
+  colourful digital art and polished stock photos. Small, heavily compressed or edited images are less reliable.
+  Never accuse anyone based on this result alone.
+</section>
+<p class="actions"><a class="btn" href="{{ url_for('index') }}">Check another image</a>
+<a class="btn secondary" href="{{ url_for('history') }}">View history</a></p>
+{% endblock %}

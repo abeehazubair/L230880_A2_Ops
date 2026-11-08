@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}History{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>Prediction history</h1>
+  <p class="muted">Every verdict is stored permanently: what was decided, when, by which model and how confidently.
+     Showing the latest {{ rows|length }} of {{ total }}.</p>
+  {% if rows %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>When (UTC)</th><th>File</th><th>Verdict</th><th>Confidence</th><th>P(AI)</th><th>Model</th><th>Source</th></tr></thead>
+      <tbody>
+      {% for row in rows %}
+        <tr>
+          <td>{{ row.id }}</td>
+          <td class="nowrap">{{ row.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+          <td class="file" title="{{ row.filename }}">{{ row.filename }}</td>
+          <td><span class="pill {{ 'ai' if row.label == 'AI-generated' else 'real' }}">{{ row.label }}</span></td>
+          <td>{{ '%.1f'|format(row.confidence * 100) }}%</td>
+          <td>{{ '%.3f'|format(row.p_ai) }}</td>
+          <td class="small">{{ row.model_version }}</td>
+          <td>{{ row.source }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="empty">No predictions yet. <a href="{{ url_for('index') }}">Upload the first image.</a></p>
+  {% endif %}
+</section>
+{% endblock %}
