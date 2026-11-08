@@ -29,7 +29,8 @@ def compile_binary(model, learning_rate):
 def conv_block(x, filters, name):
     """Conv -> BatchNorm -> ReLU -> MaxPool: find patterns, stabilise, keep strong ones, shrink."""
     x = layers.Conv2D(filters, 3, padding="same", use_bias=False, name=f"{name}_conv")(x)
-    x = layers.BatchNormalization(name=f"{name}_bn")(x)
+    x = layers.BatchNormalization(momentum=0.9, name=f"{name}_bn")(x)
+
     x = layers.ReLU(name=f"{name}_relu")(x)
     return layers.MaxPooling2D(2, name=f"{name}_pool")(x)
 

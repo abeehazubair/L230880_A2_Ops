@@ -141,6 +141,8 @@ def main():
                           ft_max_epochs=args.ft_epochs,
                           unfreeze=args.unfreeze_layers or "last_block")
         mlflow.log_params(params)
+        if not transfer:
+            mlflow.log_param("bn_momentum", 0.9)
 
         history, boundary, manual = {}, None, not args.autolog
         if not transfer:
