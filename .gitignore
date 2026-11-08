@@ -19,3 +19,6 @@ tuner_runs/
 evidence/
 .vscode/
 .claude/
+
+# Per-run training outputs (stored in MLflow)
+outputs/
