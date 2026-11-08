@@ -1,0 +1,25 @@
+# Task 6.4 "BEFORE" image - identical to ./Dockerfile except ONE thing:
+# pip's download cache is kept (no PIP_NO_CACHE_DIR), as in a typical first Dockerfile.
+# Build:  docker build -f Dockerfile.unoptimized -t visionguard-web:unoptimized .
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    TF_CPP_MIN_LOG_LEVEL=2
+
+WORKDIR /app
+COPY requirements-serve.txt .
+RUN pip install -r requirements-serve.txt
+
+RUN useradd --create-home --uid 10001 appuser \
+ && mkdir -p /app/data /app/models \
+ && chown -R appuser:appuser /app/data
+COPY src/data.py src/data.py
+COPY app/ app/
+
+ENV HOST=0.0.0.0 PORT=8000 MODEL_PATH=/app/models/champion \
+    DATABASE_URL=sqlite:////app/data/visionguard.db INFERENCE_MODE=local
+USER appuser
+EXPOSE 8000
+CMD ["python", "-m", "app.serve"]
