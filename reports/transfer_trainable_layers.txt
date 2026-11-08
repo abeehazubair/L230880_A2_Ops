@@ -1,0 +1,9 @@
+== STAGE 1 - backbone frozen, lr=1e-3 ==
+Trainable params: 1,281 of 2,259,265 (0.1%)
+Head layers (trainable): ['p_ai']
+Backbone layers trainable (0): []
+
+== STAGE 2 - last block unfrozen, lr=1e-5 ==
+Trainable params: 880,321 of 2,259,265 (39.0%)
+Head layers (trainable): ['p_ai']
+Backbone layers trainable (4): ['block_16_expand', 'block_16_depthwise', 'block_16_project', 'Conv_1']
