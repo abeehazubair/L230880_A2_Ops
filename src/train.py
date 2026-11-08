@@ -129,7 +129,8 @@ def main():
     with mlflow.start_run(run_name=name) as run:
         mlflow.set_tags({"git_commit": commit, "git_dirty": str(dirty), "dvc_data_md5": dvc_data_md5(),
                          "seed": str(args.seed), "model_type": args.model, "author": "L230880",
-                         "logging": "autolog" if args.autolog else "manual"})
+                         "logging": "autolog" if args.autolog else "manual",
+                         "device": "GPU" if tf.config.list_physical_devices("GPU") else "CPU"})
         params = {"model_type": args.model, "img_size": args.img_size, "augment": augment,
                   "dropout": dropout, "seed": args.seed, "patience": args.patience,
                   "train_images": len(pd.read_csv("splits/train.csv"))}
