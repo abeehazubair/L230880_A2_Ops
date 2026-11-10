@@ -25,3 +25,7 @@ outputs/
 
 # Local SQLite database
 *.db
+
+# Vercel deployment: model copy and CLI link folder
+deploy/vercel/model/
+deploy/vercel/.vercel/
