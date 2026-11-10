@@ -29,3 +29,5 @@ outputs/
 # Vercel deployment: model copy and CLI link folder
 deploy/vercel/model/
 deploy/vercel/.vercel/
+.vercel
+.env*
